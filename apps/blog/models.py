@@ -10,7 +10,7 @@ class Blog(db.Model):
     __tablename__ = 'blog'
 
     id = sq.Column(sq.Integer, primary_key=True)
-    slug = sq.Column(sq.String, nullable=False)
+    slug = sq.Column(sq.String, unique=True, nullable=False)
     title = sq.Column(sq.String, nullable=False)
     content = sq.Column(sq.String, nullable=False)
     date = sq.Column(sq.DateTime, default=datetime.utcnow)
