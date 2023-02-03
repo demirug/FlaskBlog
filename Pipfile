@@ -15,6 +15,7 @@ celery = "*"
 redis = "*"
 eventlet = "*"
 flask-ckeditor = "*"
+flask-migrate = "*"
 
 [dev-packages]
 

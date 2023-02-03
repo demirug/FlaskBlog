@@ -4,6 +4,7 @@ from flask import Flask
 from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
+from flask_migrate import Migrate
 from flask_sqlalchemy import SQLAlchemy
 
 from apps.controllers import register_blueprints
@@ -17,14 +18,16 @@ db = SQLAlchemy()
 mail = Mail()
 celery = Celery()
 ckeditor = CKEditor()
+migrate = Migrate()
 
 
 def create_app():
     app = create_base_app()
     register_blueprints(app)
-
     with app.app_context():
         db.create_all()
+
+    migrate.init_app(app, db)
 
     return app
 
