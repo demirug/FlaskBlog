@@ -1,6 +1,7 @@
 from flask import Blueprint
+
+from application import login_manager
 from apps.authorization.models import User
-from extensions import login_manager
 
 from .models import *
 

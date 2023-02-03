@@ -4,7 +4,7 @@ from importlib.machinery import SourceFileLoader
 
 from celery import Celery
 
-from application import create_worker_app
+from application import create_base_app
 
 
 def __import_tasks(directory=os.getcwd()):
@@ -33,5 +33,5 @@ def make_celery(app):
     return celery
 
 
-flask_app = create_worker_app()
+flask_app = create_base_app()
 celery = make_celery(flask_app)

@@ -1,10 +1,9 @@
 from datetime import datetime
 
 from flask import url_for
-
 import sqlalchemy as sq
 
-from extensions import db
+from application import db
 
 
 class Blog(db.Model):

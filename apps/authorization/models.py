@@ -3,7 +3,7 @@ from datetime import datetime
 from flask_login import UserMixin
 import sqlalchemy as sq
 
-from extensions import db
+from application import db
 
 
 class User(db.Model, UserMixin):

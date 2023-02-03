@@ -4,9 +4,9 @@ from flask import redirect, request, url_for, render_template, flash, current_ap
 from flask_login import login_user, logout_user, current_user, login_required
 from werkzeug.security import generate_password_hash
 
+from application import db
 from apps.authorization import authorization as app, User
 from apps.authorization.forms import LoginForm, RegisterForm, ChangePasswordForm
-from extensions import db
 from services.mail import send_template_email
 from services.tokens import generate_token
 
