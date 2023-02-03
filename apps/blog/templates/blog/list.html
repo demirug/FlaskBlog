@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<center>
+    <h4>Blogs</h4>
+</center>
+    <table class="table">
+  <thead>
+    <tr>
+      <th scope="col">Date</th>
+      <th scope="col">Name</th>
+      <th scope="col"></th>
+    </tr>
+  </thead>
+  <tbody>
+
+    {% for blog in blogs %}
+        <tr>
+          <th scope="row">{{ blog.date }}</th>
+          <td>{{ blog.title }}</td>
+          <td><a href="{{ blog.get_absolute_url() }}" class="btn btn-primary">View</a></td>
+        </tr>
+    {% endfor %}
+
+  </tbody>
+</table>
+{% endblock body %}

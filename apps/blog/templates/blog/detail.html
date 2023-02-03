@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<center>
+    <h4>Blog {{ object.title }}</h4>
+</center>
+    {{ object.content|safe }}
+    <p align="right">{{ object.date.strftime("%d %b %Y %I:%M %p") }}</p>
+{% endblock body %}
