@@ -12,7 +12,7 @@ def list():
     return render_template('blog/list.html', blogs=blogs)
 
 
-@app.route('/<string:slug>')
+@app.route('/view/<string:slug>')
 def detail(slug):
     blog = Blog.query.filter_by(slug=slug).first()
     if blog is None:
