@@ -1,3 +1,4 @@
+from flask_ckeditor import CKEditorField
 from flask_wtf import FlaskForm
 import wtforms
 import wtforms.validators as validators
@@ -12,7 +13,7 @@ class BlogForm(FlaskForm):
                           message="Slug allowed only lowercase letters, numbers, -")
     ])
     title = wtforms.StringField("Title", validators=[validators.InputRequired()])
-    content = wtforms.TextAreaField("Content", validators=[validators.InputRequired()])
+    content = CKEditorField('Content', validators=[validators.InputRequired()])
 
     def validate_slug(self, field):
 

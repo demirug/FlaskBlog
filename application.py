@@ -1,6 +1,7 @@
 import dotenv
 from celery import Celery
 from flask import Flask
+from flask_ckeditor import CKEditor
 from flask_login import LoginManager
 from flask_mail import Mail
 from flask_sqlalchemy import SQLAlchemy
@@ -15,6 +16,7 @@ login_manager = LoginManager()
 db = SQLAlchemy()
 mail = Mail()
 celery = Celery()
+ckeditor = CKEditor()
 
 
 def create_app():
@@ -34,6 +36,7 @@ def create_base_app():
     login_manager.init_app(app)
     mail.init_app(app)
     db.init_app(app)
+    ckeditor.init_app(app)
 
     celery.conf.update(app.config["CELERY_CONFIG"])
     celery.config_from_object(app.config)

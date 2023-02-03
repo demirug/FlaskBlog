@@ -14,6 +14,7 @@ flask-mail = "*"
 celery = "*"
 redis = "*"
 eventlet = "*"
+flask-ckeditor = "*"
 
 [dev-packages]
 
