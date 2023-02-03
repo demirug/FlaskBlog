@@ -3,6 +3,7 @@ from flask_login import login_required, current_user
 
 from application import db
 from apps.blog import Blog, blog as app
+from apps.blog.forms import BlogForm
 
 
 @app.route('/')
@@ -19,3 +20,22 @@ def detail(slug):
         abort(404)
     return render_template('blog/detail.html', object=blog)
 
+
+@app.route("/add-blog", methods=['POST', 'GET'])
+@login_required
+def add_blog():
+    form = BlogForm()
+
+    if form.validate_on_submit():
+        blog = Blog(
+            slug=form.slug.data,
+            title=form.title.data,
+            content=form.content.data,
+            author_id=current_user.id
+        )
+
+        db.session.add(blog)
+        db.session.commit()
+        return redirect(blog.get_absolute_url())
+
+    return render_template('blog/create.html', form=form)
