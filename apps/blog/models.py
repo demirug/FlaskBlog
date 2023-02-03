@@ -15,6 +15,8 @@ class Blog(db.Model):
     content = sq.Column(sq.String, nullable=False)
     date = sq.Column(sq.DateTime, default=datetime.utcnow)
 
+    author_id = sq.Column(sq.Integer, sq.ForeignKey('user.id'))
+
     def get_absolute_url(self):
         return url_for('blog.detail', slug=self.slug)
 
