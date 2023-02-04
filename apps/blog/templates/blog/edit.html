@@ -13,8 +13,9 @@
         {% endfor %}
         <p> {{ field.label() }} {{ field }}</p>
     {% endfor %}
+    <a class="btn btn-success" href="{{ object.get_absolute_url() }}">Back to view</a>
     <button class="btn btn-primary" type="submit">Submit</button>
-    <a class="btn btn-danger" href="{{ blog.get_absolute_url() }}">Back to view</a>
+    <a class="btn btn-danger" href="{{ url_for('blog.delete_blog', slug=object.slug) }}">Delete blog</a>
 </form>
 
 {{ ckeditor.load() }}

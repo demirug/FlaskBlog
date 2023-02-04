@@ -1,4 +1,4 @@
-from flask import request, render_template, abort, redirect
+from flask import request, render_template, abort, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from application import db
@@ -57,4 +57,19 @@ def edit_blog(slug):
         db.session.commit()
 
         return redirect(blog.get_absolute_url())
-    return render_template('blog/edit.html', blog=blog, form=form)
+    return render_template('blog/edit.html', object=blog, form=form)
+
+
+@app.route('/delete/<string:slug>')
+@login_required
+def delete_blog(slug):
+    blog: Blog = Blog.query.filter_by(slug=slug, author_id=current_user.id).first()
+    if blog is None:
+        abort(404)
+
+    db.session.delete(blog)
+    db.session.commit()
+
+    flash(f"Blog {blog.title} has been deleted")
+
+    return redirect(url_for(".list"))
