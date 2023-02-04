@@ -43,13 +43,9 @@ def add_blog():
 @app.route("/edit/<string:slug>", methods=['POST', 'GET'])
 @login_required
 def edit_blog(slug):
-    blog: Blog = Blog.query.filter_by(slug=slug).first()
-
+    blog: Blog = Blog.query.filter_by(slug=slug, author_id=current_user.id).first()
     if blog is None:
         abort(404)
-
-    if blog.author_id != current_user.id:
-        abort(403)
 
     form = BlogForm(instance=blog)
 
