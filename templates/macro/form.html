@@ -1,0 +1,14 @@
+{% macro print_form(form) %}
+    {{ form.csrf_token }}
+
+    {% for field in form if field.name != "csrf_token" %}
+    <div class="mb-3">
+
+        <label class="form-label">{{ field.label() }}</label>
+        {{ field(class_="form-control") }}
+        {% for error in field.errors %}
+            <small class="form-text text-danger" style="color:red">{{ error }}</small>
+        {% endfor %}
+    </div>
+    {% endfor %}
+{% endmacro %}

@@ -1,20 +1,17 @@
 {% extends 'base.html' %}
+{% from 'macro/form.html' import print_form %}
 
 {% block body %}
 <form method="post">
-    <center>
-        <h4>Created blog</h4>
-    </center>
-    {{ form.csrf_token }}
-
-    {% for field in form if field.name not in ["csrf_token", "submit"] %}
-        {% for error in field.errors %}
-            <p style="color: red">+ {{ error }}</p>
-        {% endfor %}
-        <p> {{ field.label() }} {{ field }}</p>
-    {% endfor %}
-    <button class="btn btn-primary" type="submit">Submit</button>
-    <a class="btn btn-danger" href="{{ url_for('blog.list') }}">Back to main</a>
+    <div class="mx-4 px-5 py-5">
+        <center><h4>Create blog</h4></center>
+        {{ print_form(form) }}
+        <hr>
+        <center class="py-3">
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <a class="btn btn-danger" href="{{ url_for('blog.list') }}">Back to main</a>
+        </center>
+    </div>
 </form>
 
 {{ ckeditor.load() }}
