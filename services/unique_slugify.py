@@ -8,14 +8,14 @@ pattern = "^(({slug})|({slug}-[0-9]+))$"
 def unique_slugify(instance, value, slug_field_name='slug', max_length=None):
     """ Generate unique slug for the model instance by value """
     _slug = slugify(value)
-
     # Limit slug
     if max_length:
         _slug = _slug[:max_length]
 
     # If given slug already used by instance return it
     cur_slug = getattr(instance, slug_field_name)
-    if re.match(pattern.format(slug=_slug), cur_slug):
+
+    if cur_slug and re.match(pattern.format(slug=_slug), cur_slug):
         return cur_slug
 
     # Get all slugs that are the same as a given slug or given slug with a numeric index
