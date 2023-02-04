@@ -6,7 +6,7 @@ from werkzeug.security import generate_password_hash
 
 from application import db
 from apps.authorization import authorization as app, User
-from apps.authorization.forms import LoginForm, RegisterForm, ChangePasswordForm
+from apps.authorization.forms import LoginForm, RegisterForm, ChangePasswordForm, ResetForm, ResetConfirmForm
 from services.mail import send_template_email
 from services.tokens import generate_token
 
@@ -97,6 +97,59 @@ def change_password():
 def logout():
     logout_user()
     return redirect(url_for(current_app.config.get('INDEX_VIEW')))
+
+
+@app.route('/reset', methods=['POST', 'GET'])
+def reset():
+    if current_user.is_authenticated:
+        return redirect(url_for(current_app.config.get('INDEX_VIEW')))
+
+    form = ResetForm()
+
+    if form.validate_on_submit():
+
+        target: User = User.query.filter_by(username=form.username.data, is_active=True).first()
+
+        if target:
+
+            _token = generate_token(f"{target.id}{target.email}{target.last_login}", target.username, 10)
+
+            send_template_email(target.email, 'Password reset', 'authorization/email/reset.html', user=target,
+                                url=request.url_root[:-1] + url_for('.reset_confirm', username=target.username, token=_token))
+
+        flash('Reset email sent to your email')
+        return redirect(url_for('.login'))
+
+    return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', ''), ('Login', url_for('.login')), ('Reset',)])
+
+
+@app.route('/reset-confirm/<string:username>/<string:token>', methods=['POST', 'GET'])
+def reset_confirm(username, token):
+    if current_user.is_authenticated:
+        return redirect(url_for(current_app.config.get('INDEX_VIEW')))
+
+    target: User = User.query.filter_by(username=username, is_active=True).first()
+
+    if target:
+        _token = generate_token(f"{target.id}{target.email}{target.last_login}", target.username, 10)
+        if _token == token:
+            form = ResetConfirmForm()
+            if form.validate_on_submit():
+                target.psw_hash = generate_password_hash(form.password.data)
+                target.last_login = datetime.datetime.utcnow()
+
+                db.session.add(target)
+                db.session.commit()
+
+                login_user(target)
+
+                flash('Account password changed')
+
+                return redirect(url_for('.profile'))
+
+            return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', ''), ('Login', url_for('.login')), ('Reset',)])
+
+    abort(404)
 
 
 @app.route('/profile')
