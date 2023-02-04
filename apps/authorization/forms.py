@@ -80,3 +80,18 @@ class ChangePasswordForm(FlaskForm):
         if self.password_old.data == field.data:
             raise validators.ValidationError("New/Old passwords are same")
         return field
+
+
+class ResetForm(FlaskForm):
+    username = wtforms.StringField("Username", validators=[validators.InputRequired()])
+    email = wtforms.EmailField("Email", validators=[validators.InputRequired()])
+
+
+class ResetConfirmForm(FlaskForm):
+    password = wtforms.PasswordField("New Password", validators=[
+        validators.Length(9, 24),
+        validators.InputRequired(),
+        validators.Regexp('^(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$')
+    ])
+    password_cnf = wtforms.PasswordField("Confirm password",
+                                         validators=[validators.Length(9, 24), validators.EqualTo('password')])

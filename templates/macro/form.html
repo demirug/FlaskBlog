@@ -5,7 +5,11 @@
     <div class="mb-3">
 
         <label class="form-label">{{ field.label() }}</label>
-        {{ field(class_="form-control") }}
+        {% if field.type in ['BooleanField'] %}
+            {{ field() }}
+        {% else %}
+            {{ field(class_="form-control") }}
+        {% endif %}
         {% for error in field.errors %}
             <small class="form-text text-danger" style="color:red">{{ error }}</small>
         {% endfor %}
