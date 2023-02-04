@@ -11,7 +11,6 @@ from services.unique_slugify import unique_slugify
 
 
 class BlogForm(ModelFormMixin, FlaskForm):
-
     model = Blog
 
     slug = wtforms.StringField("Slug", validators=[
@@ -33,3 +32,7 @@ class BlogForm(ModelFormMixin, FlaskForm):
             raise validators.ValidationError("Given slug already in use")
 
         return field
+
+
+class CommentForm(FlaskForm):
+    text = CKEditorField('Comment', validators=[validators.InputRequired(), validators.Length(min=15)])

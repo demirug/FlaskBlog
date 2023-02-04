@@ -14,7 +14,52 @@
     </div>
 </div>
 
-
+<div class="row">
     {{ object.content|safe }}
     <p align="right">{{ object.date.strftime("%d %b %Y %I:%M %p") }}</p>
+</div>
+
+<div class="row">
+      {% if form %}
+        <hr>
+        {% from 'macro/form.html' import print_form %}
+
+        <form method="post">
+            <center>
+                <div class="col-md-8 col-lg-8" style="border: 2px solid black; border-radius: 5px">
+                    <center><h4>Add comment</h4></center>
+                    {{ print_form(form) }}
+                    <center class="py-3">
+                        <button class="btn btn-primary" type="submit">Submit</button>
+                    </center>
+                </div>
+            </center>
+
+        </form>
+
+    {% endif %}
+</div>
+
+<div class="row">
+    <center>
+        <h4>Comments</h4>
+        <div class="col-md-8 col-lg-6">
+            {% for comment in comments %}
+                 <div class="card mb-4">
+                  <div class="card-body">
+                    {{ comment.text }}
+                    <div class="d-flex justify-content-between">
+                      <div class="d-flex flex-row align-items-center">
+                        <img src="" alt="" width="25" height="25" />
+                        <p class="small mb-0 ms-2">{{ comment.username }}</p>
+                      </div>
+                        <time class="small mb-0 ms-2 text-center">{{ comment.date }}</time>
+                    </div>
+                  </div>
+                </div>
+            {% endfor %}
+        </div>
+    </center>
+</div>
+
 {% endblock body %}

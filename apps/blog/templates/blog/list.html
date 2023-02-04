@@ -27,7 +27,7 @@
 
     {% for blog in page_obj.items %}
         <tr>
-          <th scope="row">{{ blog.date }}</th>
+          <th scope="row">{{ blog.date.strftime("%d %b %Y %I:%M %p") }}</th>
           <td>{{ blog.title }}</td>
           <td><a href="{{ blog.get_absolute_url() }}" class="btn btn-primary">View</a></td>
         </tr>
