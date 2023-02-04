@@ -22,3 +22,14 @@ class Blog(db.Model):
 
     def __repr__(self):
         return f"<Blog {self.title}>"
+
+
+class Comment(db.Model):
+    __tablename__ = 'comment'
+
+    id = sq.Column(sq.Integer, primary_key=True)
+    text = sq.Column(sq.String, nullable=False)
+
+    author_id = sq.Column(sq.Integer, sq.ForeignKey('user.id', ondelete='CASCADE'))
+    blog_id = sq.Column(sq.Integer, sq.ForeignKey('blog.id', ondelete='CASCADE'))
+    date = sq.Column(sq.DateTime, default=datetime.utcnow)
