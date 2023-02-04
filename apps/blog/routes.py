@@ -31,6 +31,8 @@ def add_blog():
 
     if form.validate_on_submit():
         blog: Blog = form.save()
+        blog.author_id = current_user.id
+
         db.session.add(blog)
         db.session.commit()
         return redirect(blog.get_absolute_url())
