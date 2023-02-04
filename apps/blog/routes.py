@@ -2,8 +2,9 @@ from flask import request, render_template, abort, redirect, url_for, flash
 from flask_login import login_required, current_user
 
 from application import db
-from apps.blog import Blog, blog as app
-from apps.blog.forms import BlogForm
+from apps.authorization import User
+from apps.blog import Blog, blog as app, Comment
+from apps.blog.forms import BlogForm, CommentForm
 
 
 @app.route('/')
@@ -16,13 +17,35 @@ def list():
     return render_template('blog/list.html', page_obj=paginator, display_more_pages=2)
 
 
-@app.route('/view/<string:slug>')
+@app.route('/view/<string:slug>', methods=['POST', 'GET'])
 def detail(slug):
     blog = Blog.query.filter_by(slug=slug).first()
     if blog is None:
         abort(404)
-    return render_template('blog/detail.html', object=blog,
-                           breadcrumbs=[("Main", '/'), (blog.title,)])
+
+    form = None
+
+    # Adding comments to blog
+    if current_user.is_authenticated:
+        # Check for comment per user limit
+        if Comment.query.filter_by(blog_id=blog.id, author_id=current_user.id).count() < 3:
+
+            form = CommentForm()
+            if form.validate_on_submit():
+                comment = Comment(text=form.text.data, blog_id=blog.id, author_id=current_user.id)
+
+                db.session.add(comment)
+                db.session.commit()
+                flash("You comment sent")
+
+                return redirect(blog.get_absolute_url())
+
+    comments = db.session.query(Comment.text, Comment.date, User.username).join(User, Comment.blog_id == blog.id and User.id == Comment.author_id)
+
+    return render_template('blog/detail.html', object=blog, form=form,
+                           comments=comments,
+                           breadcrumbs=[("Main", '/'), (blog.title,)]
+                           )
 
 
 @app.route("/add", methods=['POST', 'GET'])
