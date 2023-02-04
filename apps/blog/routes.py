@@ -8,9 +8,12 @@ from apps.blog.forms import BlogForm
 
 @app.route('/')
 def list():
-    page = request.args.get('page', 1, type=int)
-    blogs = Blog.query.paginate(page=page, per_page=5)
-    return render_template('blog/list.html', blogs=blogs)
+    paginator = Blog.query.paginate(per_page=5, error_out=False)
+    page = request.args.get('page', 1, int)
+    if page > paginator.pages:
+        return redirect(request.base_url)
+    paginator.page = page
+    return render_template('blog/list.html', page_obj=paginator, display_more_pages=2)
 
 
 @app.route('/view/<string:slug>')
