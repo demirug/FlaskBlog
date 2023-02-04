@@ -90,7 +90,7 @@ def change_password():
         flash("Your password changed. Please login")
 
         return redirect(url_for('.login'))
-    return render_template('authorization/changepassword.html', form=form)
+    return render_template('authorization/changepassword.html', form=form,  breadcrumbs=[('Home', '/'), ('Profile', url_for('.profile')), ('Change password',)])
 
 
 @app.route('/logout')
@@ -120,7 +120,7 @@ def reset():
         flash('Reset email sent to your email')
         return redirect(url_for('.login'))
 
-    return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', ''), ('Login', url_for('.login')), ('Reset',)])
+    return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', '/'), ('Login', url_for('.login')), ('Reset',)])
 
 
 @app.route('/reset-confirm/<string:username>/<string:token>', methods=['POST', 'GET'])
@@ -147,7 +147,7 @@ def reset_confirm(username, token):
 
                 return redirect(url_for('.profile'))
 
-            return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', ''), ('Login', url_for('.login')), ('Reset',)])
+            return render_template('authorization/reset.html', form=form, breadcrumbs=[('Home', '/'), ('Login', url_for('.login')), ('Reset',)])
 
     abort(404)
 
@@ -155,4 +155,4 @@ def reset_confirm(username, token):
 @app.route('/profile')
 @login_required
 def profile():
-    return render_template('authorization/profile.html', object=current_user)
+    return render_template('authorization/profile.html', object=current_user, breadcrumbs=[('Home', '/'), ('Profile',)])
