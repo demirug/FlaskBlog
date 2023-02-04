@@ -1,23 +1,39 @@
+import re
+
 from slugify import slugify
 
-alphabet = {'а': 'a', 'б': 'b', 'в': 'v', 'г': 'g', 'д': 'd', 'е': 'e', 'ё': 'yo', 'ж': 'zh', 'з': 'z', 'и': 'i',
-            'й': 'j', 'к': 'k', 'л': 'l', 'м': 'm', 'н': 'n', 'о': 'o', 'п': 'p', 'р': 'r', 'с': 's', 'т': 't',
-            'у': 'u', 'ф': 'f', 'х': 'kh', 'ц': 'ts', 'ч': 'ch', 'ш': 'sh', 'щ': 'shch', 'ы': 'i', 'э': 'e', 'ю': 'yu',
-            'я': 'ya'}
+pattern = "^(({slug})|({slug}-[0-9]+))$"
 
 
-def unique_slugify(instance, value, max_length=None):
-    _slug = slugify(''.join(alphabet.get(w, w) for w in value.lower()))
+def unique_slugify(instance, value, slug_field_name='slug', max_length=None):
+    """ Generate unique slug for the model instance by value """
+    _slug = slugify(value)
 
+    # Limit slug
     if max_length:
         _slug = _slug[:max_length]
 
-    slugs = [blog.slug for blog in instance.__class__.query.filter(instance.__class__.slug.startswith(_slug))]
+    # If given slug already used by instance return it
+    cur_slug = getattr(instance, slug_field_name)
+    if re.match(pattern.format(slug=_slug), cur_slug):
+        return cur_slug
 
-    slug = _slug
-    id = 1
-    while slug in slugs:
-        slug = f"{_slug}-{id}"
-        id += 1
+    # Get all slugs that are the same as a given slug or given slug with a numeric index
+    slug_field = getattr(instance.__class__, slug_field_name)
+    slugs = [el[0] for el in
+             instance.query.filter(slug_field.regexp_match(pattern.format(slug=_slug))).values(slug_field)]
 
-    return slug
+    # If same slugs not used yet
+    if len(slugs) == 0:
+        return _slug
+
+    # Get all used numerics of the current slug
+    numbers = [int(el.split('-')[-1]) for el in slugs if el.split('-')[-1].isdigit()]
+
+    # If numerics not found, default will be 1
+    if len(numbers) == 0:
+        return f"{_slug}-1"
+
+    # Sorting to get the latest numeric
+    numbers.sort()
+    return f"{_slug}-{numbers[-1] + 1}"
