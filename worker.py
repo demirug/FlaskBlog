@@ -8,12 +8,14 @@ from application import create_base_app
 
 
 def __import_tasks(directory=os.getcwd()):
+    """ Recursion searching and importing py files with name tasks.py or task_{any_name}.py """
     for file in os.listdir(directory):
         path = os.path.join(directory, file)
         if os.path.isdir(path):
             __import_tasks(path)
         if re.match("^((tasks)|(task_[aA-zZ0-9_]+)).py$", file):
-            SourceFileLoader(file, path).load_module()
+            # Remove .py extension in registration name
+            SourceFileLoader(file[:-3], path).load_module()
 
 
 def make_celery(app):
