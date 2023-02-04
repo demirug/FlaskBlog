@@ -1,0 +1,13 @@
+{% macro print_breadcrumbs(breadcrumbs) %}
+    <nav class="ms-3 mt-3" aria-label="breadcrumb">
+      <ol class="breadcrumb">
+          {% for data in breadcrumbs %}
+              {% if data == breadcrumbs|last %}
+                <li class="breadcrumb-item active" aria-current="page">{{ data[0] }}</li>
+              {% else %}
+                <li class="breadcrumb-item"><a href="{{ data[1] }}">{{ data[0] }}</a></li>
+              {% endif %}
+          {% endfor %}
+      </ol>
+    </nav>
+{% endmacro %}

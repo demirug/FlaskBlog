@@ -21,7 +21,8 @@ def detail(slug):
     blog = Blog.query.filter_by(slug=slug).first()
     if blog is None:
         abort(404)
-    return render_template('blog/detail.html', object=blog)
+    return render_template('blog/detail.html', object=blog,
+                           breadcrumbs=[("Main", '/'), (blog.title,)])
 
 
 @app.route("/add", methods=['POST', 'GET'])
@@ -40,7 +41,8 @@ def add_blog():
 
         return redirect(blog.get_absolute_url())
 
-    return render_template('blog/create.html', form=form)
+    return render_template('blog/create.html', form=form,
+                           breadcrumbs=[("Main", '/'), ("Add blog",)])
 
 
 @app.route("/edit/<string:slug>", methods=['POST', 'GET'])
@@ -60,7 +62,8 @@ def edit_blog(slug):
         flash(f"Blog {blog.title} updated")
 
         return redirect(blog.get_absolute_url())
-    return render_template('blog/edit.html', object=blog, form=form)
+    return render_template('blog/edit.html', object=blog, form=form,
+                           breadcrumbs=[("Main", '/'), (f"Edit blog `{blog.title}`",)])
 
 
 @app.route('/delete/<string:slug>')
