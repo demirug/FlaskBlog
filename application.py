@@ -30,7 +30,7 @@ def create_app():
         db.create_all()
 
     migrate.init_app(app, db)
-
+    admin.init_app(app)
     return app
 
 
@@ -42,7 +42,6 @@ def create_base_app():
     mail.init_app(app)
     db.init_app(app)
     ckeditor.init_app(app)
-    admin.init_app(app)
 
     celery.conf.update(app.config["CELERY_CONFIG"])
     celery.config_from_object(app.config)
