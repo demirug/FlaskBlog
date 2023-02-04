@@ -16,6 +16,7 @@ redis = "*"
 eventlet = "*"
 flask-ckeditor = "*"
 flask-migrate = "*"
+flask-admin = "*"
 
 [dev-packages]
 
