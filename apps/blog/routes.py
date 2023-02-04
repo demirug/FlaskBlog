@@ -27,13 +27,7 @@ def add_blog():
     form = BlogForm()
 
     if form.validate_on_submit():
-        blog = Blog(
-            slug=form.slug.data,
-            title=form.title.data,
-            content=form.content.data,
-            author_id=current_user.id
-        )
-
+        blog: Blog = form.save()
         db.session.add(blog)
         db.session.commit()
         return redirect(blog.get_absolute_url())
