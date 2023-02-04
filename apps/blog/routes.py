@@ -11,7 +11,7 @@ from apps.blog.forms import BlogForm, CommentForm
 def list():
     paginator = Blog.query.paginate(per_page=5, error_out=False)
     page = request.args.get('page', 1, int)
-    if page > paginator.pages:
+    if page > paginator.pages > 0:
         return redirect(request.base_url)
     paginator.page = page
     return render_template('blog/list.html', page_obj=paginator, display_more_pages=2)
