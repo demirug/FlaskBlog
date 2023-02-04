@@ -4,6 +4,17 @@
 <center>
     <h4>Blog {{ object.title }}</h4>
 </center>
+
+<div class="row">
+    <div class="col-10"></div>
+    <div class="col">
+        {% if current_user.is_authenticated and current_user.id == object.author_id %}
+            <a href="{{ url_for('blog.edit_blog', slug=object.slug) }}" class="btn btn-success">Edit</a>
+        {% endif %}
+    </div>
+</div>
+
+
     {{ object.content|safe }}
     <p align="right">{{ object.date.strftime("%d %b %Y %I:%M %p") }}</p>
 {% endblock body %}
