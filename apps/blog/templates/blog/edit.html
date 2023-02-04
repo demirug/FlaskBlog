@@ -1,0 +1,22 @@
+{% extends 'base.html' %}
+
+{% block body %}
+<form method="post">
+    <center>
+        <h4>Edit blog</h4>
+    </center>
+    {{ form.csrf_token }}
+
+    {% for field in form if field.name not in ["csrf_token", "submit"] %}
+        {% for error in field.errors %}
+            <p style="color: red">+ {{ error }}</p>
+        {% endfor %}
+        <p> {{ field.label() }} {{ field }}</p>
+    {% endfor %}
+    <button class="btn btn-primary" type="submit">Submit</button>
+    <a class="btn btn-danger" href="{{ blog.get_absolute_url() }}">Back to view</a>
+</form>
+
+{{ ckeditor.load() }}
+
+{% endblock body %}
