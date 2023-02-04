@@ -21,7 +21,7 @@ def detail(slug):
     return render_template('blog/detail.html', object=blog)
 
 
-@app.route("/add-blog", methods=['POST', 'GET'])
+@app.route("/add", methods=['POST', 'GET'])
 @login_required
 def add_blog():
     form = BlogForm()
