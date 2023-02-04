@@ -35,6 +35,9 @@ def add_blog():
 
         db.session.add(blog)
         db.session.commit()
+
+        flash(f"Blog {blog.title} created")
+
         return redirect(blog.get_absolute_url())
 
     return render_template('blog/create.html', form=form)
@@ -53,6 +56,8 @@ def edit_blog(slug):
         blog = form.save()
         db.session.add(blog)
         db.session.commit()
+
+        flash(f"Blog {blog.title} updated")
 
         return redirect(blog.get_absolute_url())
     return render_template('blog/edit.html', object=blog, form=form)
